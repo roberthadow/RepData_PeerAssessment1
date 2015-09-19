@@ -2,17 +2,18 @@
 title: "Reproducible Research: Peer Assessment 1"
 output: 
   html_document:
+    fig_caption: yes
     keep_md: yes
     number_sections: yes
 ---
 =======================================================================================
 
 This data set describes the walking (exercise) pattern of one individual
-over a two month period in 2012. 
+over a two month period. 
 
-Preliminary observations:  The subject walks most between 8:00 am and 10:00 am. The subject's walking is more concentrated on weekdays than weekends, but the total distance walked is greater on weekends. Weekends are more consistent than weekdays.
+**Preliminary observations:**  The subject walks most between 8:00 am and 10:00 am.  The subject's walking is more concentrated on weekdays than weekends, but the total distance walked is greater on weekends.  Weekends are more consistent than weekdays (and start later).
 
-Part of the exercise is imputation of missing data values.  The missing data is spectacularly, even suspiciously, uniform. The analysis is not included here. Nevertheless, we impute the missing data according to assumptions described below.
+Part of the exercise is imputation of missing data values.  The missing data intervals are spectacularly, even suspiciously, uniform.  The analysis is not included here.  Nevertheless, we impute the missing data according to assumptions described below.
  
  
 # Loading and preprocessing the data
@@ -37,25 +38,27 @@ activity = read.csv(csvFiles,
 activity$date <- as.Date(activity$date, format = "%Y-%m-%d")
 
 if(!file.exists("figures")) dir.create("figures")
-figDir <- "./figures"
+figDir <- "./figures/"
 
 suppressPackageStartupMessages(library(plyr))
 suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(lattice))
 suppressPackageStartupMessages(library(knitr))
-opts_knit$set(fig.path = figDir) 
+opts_chunk$set(fig.path = "./figures/")
+
 
 ```
 
 
 # What is mean total number of steps taken per day?
 **Boundary conditions:**  288 intervals per day (data formatted hhmm). 
-A step = 1/2 pace; 1000 paces for mile (2000 steps per mile). 
-An observation must be a natural number &#x2115;<sup>0</sup>. 
-Five miles per day would be be healthy. Twenty-six would be exceptional. There is no outlying data.
+A step = 1/2 pace; 1000 paces for mile (2000 steps per mile).  
+An observation must be a natural number &#x2115;<sup>0</sup>.  
+Five miles per day would be be healthy.  Twenty-six would be exceptional.  There is no outlying data.  
 ```{r daily_mean}
 
 activity %>% group_by(date) %>% summarise(stepsum = sum(steps , na.rm = TRUE)) %>%
-        with(hist(stepsum, main = "All Days -- Original Data", breaks = 30, # xaxt = "n",
+        with(hist(stepsum, main = "All Days -- Original Data", breaks = 30, 
         xlab = paste("Steps in a day")))
 
 # Calculate mean and median for unaltered data set
@@ -67,31 +70,45 @@ activity %>% group_by(date) %>% summarise(stepsum = sum(steps , na.rm = TRUE)) %
 ```
 
 # What is the average daily activity pattern?
-**Boundary conditions:** Strides per five minutes: Average walk 400; Brisk walk 600; Marathoner 900 (stride length doubles). There is no outlying data.
+**Boundary conditions:** Strides per five minutes: Average walk 400; Brisk walk 600; Marathoner 900 (stride length doubles).  There is no outlying data.  
 ```{r daily_pattern}
 
 activity %>% group_by(interval) %>% 
         summarise(meansteps = mean(steps, na.rm = TRUE)) %>%
-        with(plot(interval, meansteps, main = "Average Daily Pattern",
+        with(plot(interval, meansteps, type = "l",
+                main = "Average Daily Pattern",
                 xlab = "Time of Day (hhmm)", 
-                ylab = "Steps per five minutes (ave)"))
+                ylab = "Steps per five minutes (ave)"),
+                
+             )
+# Calculate average steps per interval 
+activity %>% group_by(interval) %>% summarise(mean(steps, na.rm = TRUE)) ->  meanStepsM
+
+# Determine peak interval
+peak <- max(meanStepsM[,2])
+peakRow <-subset(meanStepsM, meanStepsM[, 2] == peak)
+pHour = as.character(peakRow[1,1])
+if (length(pHour) < 4) pHour = paste("0", pHour,sep = "")
+pTime <- paste(substr(pHour, 1, 2), ":", substr(pHour,3,4), sep = "")
+print(paste("Peak five-minute period on average, all days", pTime))
+print(paste("Average number of steps in this period ", peak))
+
 
 ```
 
 
-
 # Imputing missing values
-Approximately 15% of the observations in the study are NA. These values appeared in calendar-day blocks. Weekends and weekdays had approximately the same rate of missing values (within 10%).  
-**Assumption:**  A missing value is the same as the average value for the corresponding time interval for the duration of the observation period. NA values are randomly spread through the data (inconsistent with this data).  
+Approximately 15% of the observations in the study are NA.  These values appeared in calendar-day blocks. Weekends and weekdays had approximately the same rate of missing values (within 10%).  
+**Assumption:**  A missing value is the same as the average value for the corresponding time interval for the duration of the observation period.
+NA values are randomly spread through the data (inconsistent with this data).  
 **Item Imputation:** For each NA in the data set, we made item replacement by the average value for that time interval rounded to an integer value.  
-**Result:**  Imputation by the selected method reduced the apparent difference between distance walked on weekend versus weekdays. It increased the modal number of steps per day.  
+**Result:**  Imputation by the selected method reduced the apparent difference between distance walked on weekend versus weekdays.  It increased the modal number of steps per day.  
 ```{r impute_missing}
 
 # Count number of missing observations
 print(paste("Number NA values in data set is", sum(is.na(activity$steps)), "of", nrow(activity)))
 
-# Calculate average steps per interval 
-activity %>% group_by(interval) %>% summarise(mean(steps, na.rm = TRUE)) ->  meanStepsM
+# Use previously calculated average steps per interval 
 
 aM <- activity  # aM is a dataframe with imputed values
 for(i in 1:288) {
@@ -111,47 +128,30 @@ aM %>% group_by(date) %>% summarise(stepsum = sum(steps , na.rm = TRUE)) %>%
 
 
 # Are there differences in activity patterns between weekdays and weekends?
-Properly, this question should be investigated before and after looking at NA values. It is possible that day of week is a confounder.  That is, NA values may be correlated with the day of the week.  
+Properly, this question should be investigated before and after looking at NA values.  It is possible that day of week is a confounder.  That is, NA values may be correlated with the day of the week.  
+**Observations:**  The subject walks most between 8:00 am and 10:00 am.  The subject's walking is more concentrated on weekdays than weekends, but the total distance walked is greater on weekends.  Weekends are more consistent than weekdays (and start later).  
 
-## Weekend Analysis
 ```{r weekend_effect}
 
 activity %>% 
-        filter(weekdays(date) %in% c("Sunday", "Saturday")) %>%
-        group_by(interval) %>% 
-        summarise(meansteps = mean(steps, na.rm = TRUE)) %>%
-        with(plot(interval, meansteps, main = "Weekend Average Activity",
-                  xlab = "Time of Day (hhmm)", 
-                  ylab = "Steps per five minutes (ave)"))
+        mutate(weekend = (weekdays(date) %in% c("Saturday", "Sunday")))  %>%
+        mutate(meansteps = 999) %>%
+        group_by(weekend, interval) %>%
+        summarise(meansteps = as.integer(mean(steps, na.rm = TRUE))) %>%
+        group_by(weekend) -> foo
 
-# Calculate summary statistics weekend activity
-activity %>% 
-        filter(weekdays(date) %in% c("Sunday", "Saturday")) %>%
-        group_by(date) %>% summarise(stepsum = sum(steps , na.rm = TRUE)) %>%
-        summarise_each(funs(mean(.,na.rm = TRUE), 
-                            median(.,na.rm = TRUE),
-                            sd(.,na.rm = TRUE)), stepsum)
-```
+foo<-data.frame(weekend = foo[, 1],
+                interval= foo[, 2],
+                meansteps=foo[, 3])
 
-## Weekday Analysis
-``` {r Weekday_analysis}
 
-days <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+f <- factor(foo$weekend, labels = c("Weekdays", "Weekends"))
+xyplot(meansteps ~ interval | f, data = foo,
+                                 type = "l",
+                                 pch = 20,
+                                 layout = c(1,2), 
+                                 xlab = "Time of Day (hhmm)",
+                                 ylab =  "Steps per Five Minutes (ave)")
 
-activity %>% 
-        filter(weekdays(date) %in% days) %>%
-        group_by(interval) %>% 
-        summarise(meansteps = mean(steps, na.rm = TRUE)) %>%
-        with(plot(interval, meansteps, main = "Weekday Average Activity",
-                  xlab = "Time_of_Day_(hhmm)", 
-                  ylab = "Steps per five minutes (ave)"))
-
-# Calculate summary statistics weekday activity
-activity %>% 
-        filter(weekdays(date) %in% days) %>%
-        group_by(date) %>% summarise(stepsum = sum(steps , na.rm = TRUE)) %>%
-        summarise_each(funs(mean(.,na.rm = TRUE), 
-                            median(.,na.rm = TRUE),
-                            sd(.,na.rm = TRUE)), stepsum)
 ```
 

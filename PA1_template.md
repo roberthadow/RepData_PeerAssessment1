@@ -88,6 +88,32 @@ activity %>% group_by(interval) %>%
 
 ![](./figures/daily_pattern-1.png) 
 
+```r
+# Calculate average steps per interval 
+activity %>% group_by(interval) %>% summarise(mean(steps, na.rm = TRUE)) ->  meanStepsM
+
+# Determine peak interval
+
+peak <- max(meanStepsM[,2])
+peakRow <-subset(meanStepsM, meanStepsM[, 2] == peak)
+pHour = as.character(peakRow[1,1])
+if (length(pHour) < 4) pHour = paste("0", pHour,sep = "")
+pTime <- paste(substr(pHour, 1, 2), ":", substr(pHour,3,4), sep = "")
+print(paste("Peak five-minute period on average, all days", pTime))
+```
+
+```
+## [1] "Peak five-minute period on average, all days 08:35"
+```
+
+```r
+print(paste("Average number of steps in this period ", peak))
+```
+
+```
+## [1] "Average number of steps in this period  206.169811320755"
+```
+
 
 # Imputing missing values
 Approximately 15% of the observations in the study are NA.  These values appeared in calendar-day blocks. Weekends and weekdays had approximately the same rate of missing values (within 10%).  
@@ -106,8 +132,7 @@ print(paste("Number NA values in data set is", sum(is.na(activity$steps)), "of",
 ```
 
 ```r
-# Calculate average steps per interval 
-activity %>% group_by(interval) %>% summarise(mean(steps, na.rm = TRUE)) ->  meanStepsM
+# Use previously calculated average steps per interval 
 
 aM <- activity  # aM is a dataframe with imputed values
 for(i in 1:288) {
