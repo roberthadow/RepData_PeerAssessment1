@@ -81,8 +81,7 @@ activity %>% group_by(interval) %>%
         with(plot(interval, meansteps, type = "l",
                 main = "Average Daily Pattern",
                 xlab = "Time of Day (hhmm)", 
-                ylab = "Steps per five minutes (ave)"),
-                
+                ylab = "Steps per five minutes (ave)")
              )
 ```
 
@@ -98,11 +97,11 @@ peakRow <-subset(meanStepsM, meanStepsM[, 2] == peak)
 pHour = as.character(peakRow[1,1])
 if (length(pHour) < 4) pHour = paste("0", pHour,sep = "")
 pTime <- paste(substr(pHour, 1, 2), ":", substr(pHour,3,4), sep = "")
-print(paste("Peak five-minute period on average, all days, attime ", pTime, "  steps ", peak))
+print(paste("Peak five-minute period on average, all days, at time ", pTime, "  steps ", peak))
 ```
 
 ```
-## [1] "Peak five-minute period on average, all days, attime  08:35   steps  206.169811320755"
+## [1] "Peak five-minute period on average, all days, at time  08:35   steps  206.169811320755"
 ```
 
 
@@ -182,4 +181,5 @@ xyplot(meansteps ~ interval | f, data = foo,
 ```
 
 ![](./figures/weekend_effect-1.png) 
+
 

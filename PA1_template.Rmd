@@ -153,3 +153,4 @@ xyplot(meansteps ~ interval | f, data = foo,
 
 ```
 
+
