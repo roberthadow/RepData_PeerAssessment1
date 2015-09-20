@@ -31,14 +31,14 @@ activity = read.csv(csvFiles,
 
 activity$date <- as.Date(activity$date, format = "%Y-%m-%d")
 
-if(!file.exists("figures")) dir.create("figures")
-figDir <- "./figures/"
+if(!file.exists("figurez")) dir.create("figurez")
+figDir <- "./figurez/"
 
 suppressPackageStartupMessages(library(plyr))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(lattice))
 suppressPackageStartupMessages(library(knitr))
-opts_chunk$set(fig.path = "./figures/")
+opts_chunk$set(fig.path = figDir)
 ```
 
 
@@ -54,7 +54,7 @@ activity %>% group_by(date) %>% summarise(stepsum = sum(steps , na.rm = TRUE)) %
         xlab = paste("Steps in a day")))
 ```
 
-![](./figures/daily_mean-1.png) 
+![](./figurez/daily_mean-1.png) 
 
 ```r
 # Calculate mean and median for unaltered data set
@@ -85,7 +85,7 @@ activity %>% group_by(interval) %>%
              )
 ```
 
-![](./figures/daily_pattern-1.png) 
+![](./figurez/daily_pattern-1.png) 
 
 ```r
 # Calculate average steps per interval 
@@ -135,7 +135,7 @@ aM %>% group_by(date) %>% summarise(stepsum = sum(steps , na.rm = TRUE)) %>%
         xlab = "Steps in a day"))
 ```
 
-![](./figures/impute_missing-1.png) 
+![](./figurez/impute_missing-1.png) 
 
 ```r
 aM %>% group_by(date) %>% summarise(stepsum = sum(steps , na.rm = TRUE)) %>%
@@ -180,6 +180,6 @@ xyplot(meansteps ~ interval | f, data = foo,
                                  ylab =  "Steps per Five Minutes (ave)")
 ```
 
-![](./figures/weekend_effect-1.png) 
+![](./figurez/weekend_effect-1.png) 
 
 

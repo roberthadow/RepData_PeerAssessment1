@@ -88,14 +88,14 @@ activity = read.csv(csvFiles,
 
 activity$date &lt;- as.Date(activity$date, format = &quot;%Y-%m-%d&quot;)
 
-if(!file.exists(&quot;figures&quot;)) dir.create(&quot;figures&quot;)
-figDir &lt;- &quot;./figures/&quot;
+if(!file.exists(&quot;figurez&quot;)) dir.create(&quot;figurez&quot;)
+figDir &lt;- &quot;./figurez/&quot;
 
 suppressPackageStartupMessages(library(plyr))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(lattice))
 suppressPackageStartupMessages(library(knitr))
-opts_chunk$set(fig.path = &quot;./figures/&quot;)</code></pre>
+opts_chunk$set(fig.path = figDir)</code></pre>
 </div>
 <div id="what-is-mean-total-number-of-steps-taken-per-day" class="section level1">
 <h1><span class="header-section-number">2</span> What is mean total number of steps taken per day?</h1>

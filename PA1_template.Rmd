@@ -37,14 +37,14 @@ activity = read.csv(csvFiles,
 
 activity$date <- as.Date(activity$date, format = "%Y-%m-%d")
 
-if(!file.exists("figures")) dir.create("figures")
-figDir <- "./figures/"
+if(!file.exists("figurez")) dir.create("figurez")
+figDir <- "./figurez/"
 
 suppressPackageStartupMessages(library(plyr))
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(lattice))
 suppressPackageStartupMessages(library(knitr))
-opts_chunk$set(fig.path = "./figures/")
+opts_chunk$set(fig.path = figDir)
 
 
 ```
