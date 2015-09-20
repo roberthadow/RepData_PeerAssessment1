@@ -93,25 +93,16 @@ activity %>% group_by(interval) %>%
 activity %>% group_by(interval) %>% summarise(mean(steps, na.rm = TRUE)) ->  meanStepsM
 
 # Determine peak interval
-
 peak <- max(meanStepsM[,2])
 peakRow <-subset(meanStepsM, meanStepsM[, 2] == peak)
 pHour = as.character(peakRow[1,1])
 if (length(pHour) < 4) pHour = paste("0", pHour,sep = "")
 pTime <- paste(substr(pHour, 1, 2), ":", substr(pHour,3,4), sep = "")
-print(paste("Peak five-minute period on average, all days", pTime))
+print(paste("Peak five-minute period on average, all days, attime ", pTime, "  steps ", peak))
 ```
 
 ```
-## [1] "Peak five-minute period on average, all days 08:35"
-```
-
-```r
-print(paste("Average number of steps in this period ", peak))
-```
-
-```
-## [1] "Average number of steps in this period  206.169811320755"
+## [1] "Peak five-minute period on average, all days, attime  08:35   steps  206.169811320755"
 ```
 
 
