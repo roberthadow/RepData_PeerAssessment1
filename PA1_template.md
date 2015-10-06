@@ -46,7 +46,7 @@ opts_chunk$set(fig.path = figDir)
 **Boundary conditions:**  288 intervals per day (data formatted hhmm). 
 A step = 1/2 pace; 1000 paces for mile (2000 steps per mile).  
 An observation must be a natural number &#x2115;<sup>0</sup>.  
-Five miles per day would be be healthy.  Twenty-six would be exceptional.  There is no outlying data.  
+Five miles per day would be be healthy.  Twenty-six would be exceptional.  There are no outlying data.  
 
 ```r
 activity %>% group_by(date) %>% summarise(stepsum = sum(steps , na.rm = TRUE)) %>%

@@ -99,7 +99,7 @@ opts_chunk$set(fig.path = figDir)</code></pre>
 </div>
 <div id="what-is-mean-total-number-of-steps-taken-per-day" class="section level1">
 <h1><span class="header-section-number">2</span> What is mean total number of steps taken per day?</h1>
-<p><strong>Boundary conditions:</strong> 288 intervals per day (data formatted hhmm). A step = 1/2 pace; 1000 paces for mile (2000 steps per mile).<br />An observation must be a natural number ℕ<sup>0</sup>.<br />Five miles per day would be be healthy. Twenty-six would be exceptional. There is no outlying data.</p>
+<p><strong>Boundary conditions:</strong> 288 intervals per day (data formatted hhmm). A step = 1/2 pace; 1000 paces for mile (2000 steps per mile).<br />An observation must be a natural number ℕ<sup>0</sup>.<br />Five miles per day would be be healthy. Twenty-six would be exceptional. There are no outlying data.</p>
 <pre class="r"><code>activity %&gt;% group_by(date) %&gt;% summarise(stepsum = sum(steps , na.rm = TRUE)) %&gt;%
         with(hist(stepsum, main = &quot;All Days -- Original Data&quot;, breaks = 30, 
         xlab = paste(&quot;Steps in a day&quot;)))</code></pre>
