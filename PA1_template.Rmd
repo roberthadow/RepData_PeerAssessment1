@@ -13,7 +13,7 @@ over a two month period.
 
 **Preliminary observations:**  The subject walks most between 8:00 am and 10:00 am.  The subject's walking is more concentrated on weekdays than weekends, but the total distance walked is greater on weekends.  Weekends are more consistent than weekdays (and start later).
 
-Part of the exercise is imputation of missing data values.  The missing data intervals are spectacularly, even suspiciously, uniform.  The analysis is not included here.  Nevertheless, we impute the missing data according to assumptions described below.
+Part of the exercise is imputation of missing data values.  The missing data intervals are spectacularly, even suspiciously, uniform.  That analysis is not included here.  Nevertheless, we impute the missing data according to assumptions described below.
  
  
 # Loading and preprocessing the data
@@ -93,6 +93,7 @@ print(paste("Peak five-minute period on average, all days, at time ", pTime, "  
 
 
 ```
+
 
 
 # Imputing missing values
